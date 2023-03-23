@@ -7,7 +7,6 @@ def entropy(values) :
     c = Counter(values)
     ent = 0
     distinct = set(values)
-
     for item in distinct :
         frequency = c[item] / len(values)
         ent += -1 * frequency * log(frequency)
@@ -17,10 +16,16 @@ def entropy(values) :
 ## to be tested, and the other the corresponding classifications.
 ## return the remainder - the weighted average of entropy.
 ## you do this.
-
 def remainder(variables, classifications) :
-    pass
-
+    vars_list = set(variables)
+    unique_vars = list(variables)
+    class_list = list(classifications)
+    rem = 0.0
+    for var in vars_list:
+        ent = entropy([item[1] for item in zip(unique_vars, class_list) if item[0] == var])
+        rem += (unique_vars.count(var) / len(unique_vars)) * ent
+        print(f"{var} {rem} {ent}")
+    return rem
 
 ## df is a pandas dataframe, and classifications the corresponding
 # classifications.

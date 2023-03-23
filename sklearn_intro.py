@@ -37,14 +37,14 @@ def RandR(data):
 
 ## Now let's see how to use sklearn to build a decision tree.
 ## https://scikit-learn.org/stable/modules/tree.html#decision-trees
-
-breast_cancer_tree = tree.DecisionTreeClassifier()
-breast_cancer_tree.fit(breast_cancer.data, breast_cancer.target)
-
-## Now that we've built a tree, we can use it to predict a value.
-## Let's test the first element in the dataset.
-predicted_val = breast_cancer_tree.predict([breast_cancer.data[0]])
-print("Predicted value: %d. True value: %d." % (predicted_val[0], breast_cancer.target[0]))
+#
+# breast_cancer_tree = tree.DecisionTreeClassifier()
+# breast_cancer_tree.fit(breast_cancer.data, breast_cancer.target)
+#
+# ## Now that we've built a tree, we can use it to predict a value.
+# ## Let's test the first element in the dataset.
+# predicted_val = breast_cancer_tree.predict([breast_cancer.data[0]])
+# print("Predicted value: %d. True value: %d." % (predicted_val[0], breast_cancer.target[0]))
 
 ## But of course the tree gets it right - we're testing on the same data we trained
 ## on! We need to test on different data that we train with to see if it actually works.

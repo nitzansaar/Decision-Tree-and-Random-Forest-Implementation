@@ -16,8 +16,6 @@ class Test(TestCase):
         test_case3 = pd.Series([1, 2, 3, 4, 1, 2, 3, 4])
         print(DecisionTree.entropy((test_case3)))
 
-
-class Test(TestCase):
     def test_remainder(self):
         tennis_variables = ['sunny', 'sunny', 'sunny', 'sunny', 'sunny',
                             'overcast', 'overcast', 'overcast', 'overcast',
@@ -30,9 +28,11 @@ class Test(TestCase):
         test_classes1 = [0, 1, 0, 1, 0, 1, 0, 1]
         ## remainder should be 0
         print(DecisionTree.remainder(test_variables, test_classes1))
+        # assert DecisionTree.remainder(test_variables, test_classes1) == 0
         test_classes2 = [0, 0, 0, 0, 1, 1, 1, 1]
         ## remainder should be 1
         print(DecisionTree.remainder(test_variables, test_classes2))
+        # assert DecisionTree.remainder(test_variables, test_classes2) == 1
         ## remainder should be 0.69
         print(DecisionTree.remainder(tennis_variables, tennis_classes))
         data = pd.read_csv('tennis.csv')
@@ -40,8 +40,6 @@ class Test(TestCase):
         dep_vars = data['play']
         print(DecisionTree.remainder(indep_vars, dep_vars))
 
-
-class Test(TestCase):
     def test_select_attribute(self):
         data = pd.read_csv('tennis.csv')
         indep_vars = data[data.columns[:-2]]
