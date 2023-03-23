@@ -38,12 +38,12 @@ def RandR(data):
 ## Now let's see how to use sklearn to build a decision tree.
 ## https://scikit-learn.org/stable/modules/tree.html#decision-trees
 
-iris_tree = tree.DecisionTreeClassifier()
-iris_tree.fit(breast_cancer.data, breast_cancer.target)
+breast_cancer_tree = tree.DecisionTreeClassifier()
+breast_cancer_tree.fit(breast_cancer.data, breast_cancer.target)
 
 ## Now that we've built a tree, we can use it to predict a value.
 ## Let's test the first element in the dataset.
-predicted_val = iris_tree.predict([breast_cancer.data[0]])
+predicted_val = breast_cancer_tree.predict([breast_cancer.data[0]])
 print("Predicted value: %d. True value: %d." % (predicted_val[0], breast_cancer.target[0]))
 
 ## But of course the tree gets it right - we're testing on the same data we trained
@@ -54,35 +54,35 @@ print("Predicted value: %d. True value: %d." % (predicted_val[0], breast_cancer.
 ## the iris data is ordered. We'd like to shuffle it, but we want to keep the
 ## data and targets together. Let's do this by creating tuples with zip.
 
-pairs = list(zip(breast_cancer.data, breast_cancer.target))
-
-# then we'll shuffle the list.
-random.shuffle(pairs)
-
-# Now let's take the first 80% as training, and the last 20% as test.
-threshold = int(0.8 * len(pairs))
-
-training_set = pairs[:threshold]
-test_set = pairs[threshold:]
-
-## Now let's train our classifier again, just with the training set.
-
-iris_tree = tree.DecisionTreeClassifier()
-iris_tree.fit([item[0] for item in training_set],
-              [item[1] for item in training_set])
-
-## And then let's test all of the items in our test set.
-predicted_vals = iris_tree.predict([item[0] for item in test_set])
-
-## we want to iterate through predicted_vals and the test_set and compare them.
-## let's do this with zip.
-correct = 0
-for thing in zip(predicted_vals, [item[1] for item in test_set]):
-    print("Predicted value: %d Actual value: %d" % (thing[0], thing[1]))
-    if thing[0] == thing[1]:
-        correct = correct + 1
-
-print("Total correct: %d Percent correct: %f" % (correct, correct / len(predicted_vals)))
+# pairs = list(zip(breast_cancer.data, breast_cancer.target))
+#
+# # then we'll shuffle the list.
+# random.shuffle(pairs)
+#
+# # Now let's take the first 80% as training, and the last 20% as test.
+# threshold = int(0.8 * len(pairs))
+#
+# training_set = pairs[:threshold]
+# test_set = pairs[threshold:]
+#
+# ## Now let's train our classifier again, just with the training set.
+#
+# breast_cancer_tree = tree.DecisionTreeClassifier()
+# breast_cancer_tree.fit([item[0] for item in training_set],
+#                        [item[1] for item in training_set])
+#
+# ## And then let's test all of the items in our test set.
+# predicted_vals = breast_cancer_tree.predict([item[0] for item in test_set])
+#
+# ## we want to iterate through predicted_vals and the test_set and compare them.
+# ## let's do this with zip.
+# correct = 0
+# for thing in zip(predicted_vals, [item[1] for item in test_set]):
+#     print("Predicted value: %d Actual value: %d" % (thing[0], thing[1]))
+#     if thing[0] == thing[1]:
+#         correct = correct + 1
+#
+# print("Total correct: %d Percent correct: %f" % (correct, correct / len(predicted_vals)))
 
 ## But wait - we still might not have an accurate measure of performance.
 ## We would like to test our tree with as much different data as possible
@@ -95,6 +95,8 @@ print("Total correct: %d Percent correct: %f" % (correct, correct / len(predicte
 ## has been used for both training and testing, and we reduce the risk of
 ## accidentally selecting a bad test set.
 
+breast_cancer_tree = tree.DecisionTreeClassifier()
+
 pairs = list(zip(breast_cancer.data, breast_cancer.target))
 random.shuffle(pairs)
 
@@ -105,14 +107,27 @@ accuracies = [0, 0, 0, 0, 0]
 for i in range(folds):
     lower_bound = fold_size * i
     upper_bound = fold_size * (i + 1)
+    test_set = pairs[lower_bound:upper_bound]
+    train_set = pairs[:lower_bound] + pairs[upper_bound:]
+    breast_cancer_tree.fit([item[0] for item in train_set],
+                           [item[1] for item in train_set])
+    predicted_vals = breast_cancer_tree.predict([item[0] for item in test_set])
+    correct = 0
+    for thing in zip(predicted_vals, [item[1] for item in test_set]):
+        print("Predicted value: %d Actual value: %d" % (thing[0], thing[1]))
+        if thing[0] == thing[1]:
+            correct = correct + 1
+
+    print("Total correct: %d Percent correct: %f" % (correct, correct / len(predicted_vals)))
+
 
 ### you figure out the rest!
 
 ## We can also ask sklearn to do cross-validation for us.
 from sklearn.model_selection import cross_val_score
 
-iris_tree = tree.DecisionTreeClassifier()
-accuracies = cross_val_score(iris_tree, breast_cancer.data, breast_cancer.target, cv=5)
+breast_cancer_tree = tree.DecisionTreeClassifier()
+accuracies = cross_val_score(breast_cancer_tree, breast_cancer.data, breast_cancer.target, cv=5)
 
 print(accuracies)
 
