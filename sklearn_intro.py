@@ -8,7 +8,7 @@ from sklearn import tree
 ## This code loads the iris dataset. Change it to load the breast cancer
 # dataset instead.
 
-iris = sklearn.datasets.load_iris()
+breast_cancer = sklearn.datasets.load_breast_cancer()
 
 
 ## iris has two member variables we're going to use right now - data and target.
@@ -21,7 +21,8 @@ iris = sklearn.datasets.load_iris()
 
 ## assume we're passing in the dataset. You do the rest.
 def ZeroR(data):
-    pass
+    count = Counter(data.target)
+    return count.most_common()
 
 
 ## Slightly more interesting is RandR. RandR selects from among the target values
@@ -29,19 +30,21 @@ def ZeroR(data):
 # ['cat','cat','cat','dog'] as our targets, we should choose 'cat' 75% of the
 # time, and 'dog' 25% of the time. You make this.
 
+# return random element
 def RandR(data):
-    pass
+    return random.choice(data.target)
+
 
 ## Now let's see how to use sklearn to build a decision tree.
 ## https://scikit-learn.org/stable/modules/tree.html#decision-trees
 
 iris_tree = tree.DecisionTreeClassifier()
-iris_tree.fit(iris.data, iris.target)
+iris_tree.fit(breast_cancer.data, breast_cancer.target)
 
 ## Now that we've built a tree, we can use it to predict a value.
 ## Let's test the first element in the dataset.
-predicted_val = iris_tree.predict([iris.data[0]])
-print("Predicted value: %d. True value: %d." % (predicted_val[0], iris.target[0]))
+predicted_val = iris_tree.predict([breast_cancer.data[0]])
+print("Predicted value: %d. True value: %d." % (predicted_val[0], breast_cancer.target[0]))
 
 ## But of course the tree gets it right - we're testing on the same data we trained
 ## on! We need to test on different data that we train with to see if it actually works.
@@ -51,7 +54,7 @@ print("Predicted value: %d. True value: %d." % (predicted_val[0], iris.target[0]
 ## the iris data is ordered. We'd like to shuffle it, but we want to keep the
 ## data and targets together. Let's do this by creating tuples with zip.
 
-pairs = list(zip(iris.data, iris.target))
+pairs = list(zip(breast_cancer.data, breast_cancer.target))
 
 # then we'll shuffle the list.
 random.shuffle(pairs)
@@ -92,7 +95,7 @@ print("Total correct: %d Percent correct: %f" % (correct, correct / len(predicte
 ## has been used for both training and testing, and we reduce the risk of
 ## accidentally selecting a bad test set.
 
-pairs = list(zip(iris.data, iris.target))
+pairs = list(zip(breast_cancer.data, breast_cancer.target))
 random.shuffle(pairs)
 
 folds = 5
@@ -109,7 +112,7 @@ for i in range(folds):
 from sklearn.model_selection import cross_val_score
 
 iris_tree = tree.DecisionTreeClassifier()
-accuracies = cross_val_score(iris_tree, iris.data, iris.target, cv=5)
+accuracies = cross_val_score(iris_tree, breast_cancer.data, breast_cancer.target, cv=5)
 
 print(accuracies)
 
@@ -120,13 +123,13 @@ print(accuracies)
 from sklearn.ensemble import RandomForestClassifier
 
 iris_forest = RandomForestClassifier(n_estimators=5)
-iris_forest.fit(iris.data, iris.target)
-print(iris_forest.predict(iris.data))
+iris_forest.fit(breast_cancer.data, breast_cancer.target)
+print(iris_forest.predict(breast_cancer.data))
 
 ## We can combine this with the five-fold cross-validation above.
 
 iris_forest = RandomForestClassifier(n_estimators=5)
-accuracies = cross_val_score(iris_forest, iris.data, iris.target, cv=5)
+accuracies = cross_val_score(iris_forest, breast_cancer.data, breast_cancer.target, cv=5)
 print(accuracies)
 
 
