@@ -2,15 +2,10 @@
 import pandas as pd
 from collections import Counter
 from math import log2 as log
-import random
 
-def ZeroR(data):
-    count = Counter(data.target)
-    return count.most_common()
 
-# return random element
-def RandR(data):
-    return random.choice(data.target)
+from sklearn_intro import ZeroR
+
 
 ### take as input a Pandas series and return the entropy of this series
 def entropy(values) :
@@ -25,7 +20,6 @@ def entropy(values) :
 ## takes as input two pandas series - one representing the variable
 ## to be tested, and the other the corresponding classifications.
 ## return the remainder - the weighted average of entropy.
-## you do this.
 def remainder(variables, classifications) :
     vars_list = set(variables)
     unique_vars = list(variables)
@@ -36,11 +30,6 @@ def remainder(variables, classifications) :
         rem += (unique_vars.count(var) / len(unique_vars)) * ent
         # print(f"{var} {rem} {ent}")
     return rem
-
-## df is a pandas dataframe, and classifications the corresponding
-# classifications.
-## check each column in the dataframe and return the column label
-# of the column which maximizes gain (minimizes remainder.)
 
 def select_attribute(df, classifications) :
     min_remainder = 1000
@@ -55,11 +44,6 @@ def select_attribute(df, classifications) :
 
     return selected_column
 
-## Here's our node class.
-## leaf nodes contain a classification
-## Non-leaf nodes contain an attribute, and a dictionary that maps
-## attribute values to children (which are Nodes).
-
 class Node :
     def __init__(self, classification=None,attribute=None):
         self.classification = classification
@@ -69,35 +53,54 @@ class Node :
     def isLeaf(self):
         return len(self.children) == 0
 
-## This is a recursive function.
-## Base case #1. Our data has 0 entropy. We are done. Create and return
-## a leaf node containing the value stored in the (right-hand) classification
-## column.
-## Base case #2. We are out of rows. There is no more data.
-# Call ZeroR on the whole dataset and use this value.
-## Base Case #3 We are out of columns. There is noise in our data.
-# Call ZeroR on the whole dataset and use this value.
-## Recursive step: Call select_attribute to find the attribute that maximizes
-## gain (or minimizes remainder).
-## Then, split your dataset. For each value of that attribute, select the rows
-## that contain that attribute value, and construct a subtree (removing the selected attribute)
-## That subtree is added to the children dictionary.
-## Question: How do you deal with subtrees for missing values?
-## When setting up your learning algorithm, create a dictionary that maps
-## each attribute to all of its possible values. Then reference that
-## to find all the possible values.
-def make_tree(dataframe):
+def make_tree(dataframe, classifications, attributes):
+    if entropy(classifications) == 0 : #Base case 1
+        return Node(dataframe, classifications) # return leaf
+    if dataframe.empty or dataframe.columns.empty : #Base case 2
+        data = ZeroR(dataframe)
+        return Node(data, classifications)
+    selected_attribute = select_attribute(dataframe, classifications)
+    node = Node(attribute=selected_attribute) #non leaf node
+    possible_values = attributes[selected_attribute]
+    for value in possible_values:
+        sub_dataframe = dataframe[dataframe[selected_attribute] == value].drop(columns=[selected_attribute]) #split data and remove attribute
+        sub_classifications = classifications[dataframe[selected_attribute] == value]
+        node.children[value] = make_tree(sub_dataframe, sub_classifications, attributes)
+    return node
 
-    return tree
+def read_file(file_path):
+    df = pd.read_csv(file_path)
+    dataframe = df.iloc[:, :-1]
+    classifications = df.iloc[:, -1]
+    return dataframe, classifications
 
-## Assume that we are being provided a pandas series named to_classify, and
-## we are to return the classification for this data.
-## This is also recursive.
-## Base case. We are a leaf. Return tree.classification.
-## Recursive step. What attribute do we test? Call classify on the child
-# corresponding to the value of that attribute in tree.children
 def classify(tree, to_classify) :
-    pass
+    if tree.isLeaf():
+        return tree.classification
+    attribute_value = to_classify[tree.attribute]
+    if attribute_value in tree.children:
+        return classify(tree.children[attribute_value], to_classify)
+    else:
+        return ZeroR(tree)
+def create_attributes_dict(dataframe):
+    attributes = {}
+    for col in dataframe.columns:
+        attributes[col] = dataframe[col].drop_duplicates().tolist()
+    return attributes
+
+
 
 if __name__ == '__main__':
-    filename = "restaurant.csv"
+    files = ["restaurant.csv", "tennis.csv", "breast-cancer.data"]
+    for file in files :
+        dataframe, classifications_series = read_file(file)
+        decision_tree = make_tree(dataframe, classifications_series, create_attributes_dict(dataframe))
+        to_classify = dataframe.iloc[0]
+        predicted_classification = classify(decision_tree, to_classify)
+        print(f"Predicted classification: {predicted_classification}\n")
+
+
+
+
+
+

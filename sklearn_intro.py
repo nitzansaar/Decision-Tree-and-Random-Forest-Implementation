@@ -25,12 +25,12 @@ breast_cancer = sklearn.datasets.load_breast_cancer()
 
 ## assume we're passing in the dataset. You do the rest.
 def ZeroR(data):
-    count = Counter(data.target)
+    count = Counter(data)
     return count.most_common()
 
 # return random element
 def RandR(data):
-    return random.choice(data.target)
+    return random.choice(data)
 
 
 ## Now let's see how to use sklearn to build a decision tree.
@@ -42,7 +42,7 @@ breast_cancer_tree.fit(breast_cancer.data, breast_cancer.target)
 # ## Now that we've built a tree, we can use it to predict a value.
 # ## Let's test the first element in the dataset.
 predicted_val = breast_cancer_tree.predict([breast_cancer.data[0]])
-print("Predicted value: %d. True value: %d." % (predicted_val[0], breast_cancer.target[0]))
+# print("Predicted value: %d. True value: %d." % (predicted_val[0], breast_cancer.target[0]))
 
 ## But of course the tree gets it right - we're testing on the same data we trained
 ## on! We need to test on different data that we train with to see if it actually works.
@@ -75,12 +75,12 @@ predicted_vals = breast_cancer_tree.predict([item[0] for item in test_set])
 # ## we want to iterate through predicted_vals and the test_set and compare them.
 # ## let's do this with zip.
 correct = 0
-for thing in zip(predicted_vals, [item[1] for item in test_set]):
-    print("Predicted value: %d Actual value: %d" % (thing[0], thing[1]))
-    if thing[0] == thing[1]:
-        correct = correct + 1
-
-print("Total correct: %d Percent correct: %f" % (correct, correct / len(predicted_vals)))
+# for thing in zip(predicted_vals, [item[1] for item in test_set]):
+#     print("Predicted value: %d Actual value: %d" % (thing[0], thing[1]))
+#     if thing[0] == thing[1]:
+#         correct = correct + 1
+#
+# print("Total correct: %d Percent correct: %f" % (correct, correct / len(predicted_vals)))
 
 ## But wait - we still might not have an accurate measure of performance.
 ## We would like to test our tree with as much different data as possible
@@ -127,7 +127,7 @@ from sklearn.model_selection import cross_val_score
 breast_cancer_tree = tree.DecisionTreeClassifier()
 accuracies = cross_val_score(breast_cancer_tree, breast_cancer.data, breast_cancer.target, cv=5)
 
-print(accuracies)
+# print(accuracies)
 
 ## As we know, Decision Trees are vulnerable to overfitting. We can
 ## overcome this through the use of a random forest, which is a collection
@@ -137,12 +137,11 @@ from sklearn.ensemble import RandomForestClassifier
 
 iris_forest = RandomForestClassifier(n_estimators=5)
 iris_forest.fit(breast_cancer.data, breast_cancer.target)
-print(iris_forest.predict(breast_cancer.data))
+# print(iris_forest.predict(breast_cancer.data))
 
 ## We can combine this with the five-fold cross-validation above.
 
 iris_forest = RandomForestClassifier(n_estimators=5)
 accuracies = cross_val_score(iris_forest, breast_cancer.data, breast_cancer.target, cv=5)
-print(accuracies)
-
+# print(accuracies)
 

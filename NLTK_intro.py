@@ -54,7 +54,7 @@ for filename in movie_reviews.fileids() :
         for word in movie_reviews.words(filename) :
             word = word.lower()
             neg_reviews[word] += 1
-
+print("Before filtering: ")
 print("10 most common words in positive reviews: ")
 print(pos_reviews.most_common(10))
 print("10 most common words in negative reviews: ")
@@ -89,7 +89,7 @@ for filename in movie_reviews.fileids() :
             if word not in stopwords.words('english') and word.isalpha():
                 word = word.lower()
                 reviews['negative'][word] += 1
-
+print("After filtering:")
 print("10 most common words in positive reviews: ")
 print(reviews['positive'].most_common(10))
 print("10 most common words in negative reviews: ")

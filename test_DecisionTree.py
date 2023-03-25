@@ -49,3 +49,6 @@ class Test(TestCase):
         print(dep_vars)
         print(DecisionTree.select_attribute(indep_vars, dep_vars))
         ## answer should be 'outlook'
+
+    def test_make_tree(self):
+        self.fail()
