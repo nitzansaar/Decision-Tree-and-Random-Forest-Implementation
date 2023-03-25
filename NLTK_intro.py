@@ -7,11 +7,19 @@ from nltk.book import *
 # text2 ('Sense and Sensibility'), text3 ('Book of Genesis'), text7('Wall Street Journal')
 
 ## For each text, which words are similar to:
-
 texts_to_examine = [text1, text2, text3, text7]
-words = ['great','king','country','fear','love']
-
+words = ['great', 'king', 'country', 'fear', 'love']
 ## your answer goes here.
+def display_similar_words():
+    for text in texts_to_examine :
+        print(text)
+        for word in words :
+            print(f"Words similar to \'{word}\':")
+            text.similar(word)
+
+
+if __name__ == '__main__':
+    display_similar_words()
 
 
 ## For each text, generate a 50-word sequence

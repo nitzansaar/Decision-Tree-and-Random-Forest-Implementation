@@ -8,6 +8,7 @@ class Test(TestCase):
     def test_entropy(self):
         ## e should be 1
         test_case1 = pd.Series([1, 2, 1, 2, 1, 2, 1, 2])
+        # print(test_case1)
         print(DecisionTree.entropy((test_case1)))
         ## e should be 0
         test_case2 = pd.Series([1, 1, 1, 1, 1, 1, 1, 1])
@@ -43,6 +44,8 @@ class Test(TestCase):
     def test_select_attribute(self):
         data = pd.read_csv('tennis.csv')
         indep_vars = data[data.columns[:-2]]
+        print(indep_vars)
         dep_vars = data['play']
+        print(dep_vars)
         print(DecisionTree.select_attribute(indep_vars, dep_vars))
         ## answer should be 'outlook'
