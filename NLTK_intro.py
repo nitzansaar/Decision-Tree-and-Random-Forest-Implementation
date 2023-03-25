@@ -45,7 +45,20 @@ neg_reviews = FreqDist()
 ## you populate these with all of the words in movie_reviews. Add the words from
 ## the positive reviews to pos_reviews, and the negative reviews to neg_reviews
 
+for filename in movie_reviews.fileids() :
+    if filename.startswith("pos") :
+        for word in movie_reviews.words(filename) :
+            word = word.lower()
+            pos_reviews[word] += 1
+    else :
+        for word in movie_reviews.words(filename) :
+            word = word.lower()
+            neg_reviews[word] += 1
 
+print("10 most common words in positive reviews: ")
+print(pos_reviews.most_common(10))
+print("10 most common words in negative reviews: ")
+print(neg_reviews.most_common(10))
 
 ## What are the most common words in each review? Does anything stand out as
 ## helping to distinguish them?
@@ -57,6 +70,8 @@ neg_reviews = FreqDist()
 ## Distribution
 
 reviews = nltk.ConditionalFreqDist()
+pos_reviews.clear()
+neg_reviews.clear()
 reviews['positive'] = pos_reviews
 reviews['negative'] = neg_reviews
 
