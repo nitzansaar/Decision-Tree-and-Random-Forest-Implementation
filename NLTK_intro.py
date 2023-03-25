@@ -2,6 +2,8 @@
 ## Please refer to the NLTK book for more details.
 import nltk
 from nltk.book import *
+from nltk.corpus import stopwords
+
 
 ## Read chapter 1. Load in nltk.book. Consider text1 ('Moby Dick'),
 # text2 ('Sense and Sensibility'), text3 ('Book of Genesis'), text7('Wall Street Journal')
@@ -10,21 +12,19 @@ from nltk.book import *
 texts_to_examine = [text1, text2, text3, text7]
 words = ['great', 'king', 'country', 'fear', 'love']
 ## your answer goes here.
-def display_similar_words():
-    for text in texts_to_examine :
-        print(text)
-        for word in words :
-            print(f"Words similar to \'{word}\':")
-            text.similar(word)
-
-
-if __name__ == '__main__':
-    display_similar_words()
+for text in texts_to_examine :
+    print(text)
+    for word in words :
+        print(f"Words similar to \'{word}\':")
+        text.similar(word)
 
 
 ## For each text, generate a 50-word sequence
 ## your answer goes here.
-
+for text in texts_to_examine :
+    print(text)
+    print("50 random token sequence:")
+    text.generate(50)
 ## Now let's look at the movie review corpus
 from nltk.corpus import movie_reviews
 
@@ -63,6 +63,22 @@ reviews['negative'] = neg_reviews
 ## add a loop that iterates through the ConditionalFreqDist and prints the
 ## 10 most common words for each category.
 
+for filename in movie_reviews.fileids() :
+    if filename.startswith("pos") :
+        for word in movie_reviews.words(filename) :
+            if word not in stopwords.words('english') and word.isalpha():
+                word = word.lower()
+                reviews['positive'][word] += 1
+    else :
+        for word in movie_reviews.words(filename) :
+            if word not in stopwords.words('english') and word.isalpha():
+                word = word.lower()
+                reviews['negative'][word] += 1
+
+print("10 most common words in positive reviews: ")
+print(reviews['positive'].most_common(10))
+print("10 most common words in negative reviews: ")
+print(reviews['negative'].most_common(10))
 
 
 
