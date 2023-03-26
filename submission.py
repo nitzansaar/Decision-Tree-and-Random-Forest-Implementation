@@ -12,7 +12,7 @@ import DecisionTree
 from sklearn_intro import ZeroR, RandR, breast_cancer
 import NLTK_intro
 
-# The NLTK code takes about a minute to run, you can comment it out to run the rest of the code quickly
+# The NLTK code takes about a minute to run, you can comment out the import to run the rest of the code quickly
 class Test(TestCase):
     def test_entropy(self):
         ## e should be 1
