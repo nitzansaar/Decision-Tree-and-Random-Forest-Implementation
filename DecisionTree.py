@@ -1,9 +1,8 @@
-
 import pandas as pd
 from collections import Counter
 from math import log2 as log
 
-
+from sklearn.model_selection import KFold
 from sklearn_intro import ZeroR
 
 
@@ -32,7 +31,7 @@ def remainder(variables, classifications) :
     return rem
 
 def select_attribute(df, classifications) :
-    min_remainder = 1000
+    min_remainder = 100
     selected_column = ''
 
     for col in df:
@@ -98,6 +97,10 @@ if __name__ == '__main__':
         to_classify = dataframe.iloc[0]
         predicted_classification = classify(decision_tree, to_classify)
         print(f"Predicted classification: {predicted_classification}\n")
+
+
+
+
 
 
 
