@@ -89,16 +89,6 @@ def create_attributes_dict(dataframe):
 
 
 
-if __name__ == '__main__':
-    files = ["restaurant.csv", "tennis.csv", "breast-cancer.data"]
-    for file in files :
-        dataframe, classifications_series = read_file(file)
-        decision_tree = make_tree(dataframe, classifications_series, create_attributes_dict(dataframe))
-        to_classify = dataframe.iloc[0]
-        predicted_classification = classify(decision_tree, to_classify)
-        print(f"Predicted classification: {predicted_classification}\n")
-
-
 
 
 
